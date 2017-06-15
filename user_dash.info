@@ -1,0 +1,5 @@
+name = User DashBoard
+description = This module displays a block for user information and pages for projects.
+package = custom
+core = 7.x
+version = 7.x-1.0

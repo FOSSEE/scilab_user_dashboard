@@ -1,0 +1,211 @@
+<?php
+/**
+ * @file
+ * Creates a block and menu links for user dashboard access.
+ */  
+//Adding new Permission
+function user_dash_permission() { return array(
+  'access user_dash' => array(
+    'title' => t('Access User Dashboard'),
+    'description' => t('Display the user dashboard'),
+  ),
+);
+}
+
+/**
+ * Implements hook_block_info()
+ */
+function user_dash_block_info() {
+  $blocks = array();
+  $blocks['user_dash'] = array(
+    'info' => t('User Dashboard'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view()
+ */
+function user_dash_block_view($delta = '') {
+  $block = array();
+  //Switch for different Blocks
+  switch ($delta) {
+    case 'user_dash':
+      //Case if user_dash block is accessed.
+      if (user_access('access user_dash')) {
+        //Check for user User Access (Access Mantained by Drupal).
+
+        //				if(!user_is_anonymous()){
+
+        //Subject in form of link to redirect to current user's page
+        $block['subject'] = "<a href='http://localhost/scilab_in_2015/user/" . $GLOBALS['user']->uid . "'>" . $GLOBALS['user']->name . "'s</a> Dashboard";
+        if (user_dash_user_is_admin($GLOBALS['user'])) {
+          //If User is admin then display content accordingly.
+          $block['content'] = array(
+            'admin' => array(
+              //								'#prefix' => '<p>',
+              '#suffix' => '<br />',
+              '#markup' => t('You are Admin'),
+              '#description' => t('Display whether the user is admin'),
+            ),
+            'email' => array(
+              //								'#prefix' => '<p>',
+              '#suffix' => '<br />',
+              '#markup' => t($GLOBALS['user']->mail),
+              '#description' => t('Display the email id of current user admin'),
+            ),
+            /*							'table' => array(
+								'#prefix' => '<table>',
+								'#suffix' => '</table>',
+								'#markup' => array (
+									'tr1' => array (
+										'#prefix' => '<tr>',
+										'#suffix' => '</tr>',
+										'#markup' => array (
+											'td11' => array(
+												'#prefix' => '<td>',
+												'#suffix' => '</td>',
+												'#markup' => 'Value of 11',
+											),
+										),
+									),
+								),
+							)*/
+            'table' => array(
+              '#theme' => 'table',
+              '#header' => array('email', 'abc'),
+              '#rows' => array('email', 'abc'),
+              '#description' => t('Display the table contaning {}'),
+            ),
+          );
+        }
+        else {
+          //If user is not Admin render content accordingly.
+          //Query database for user proposls details in table 'lab_migration_proposal'
+          $result = db_select('lab_migration_proposal', 'lmp')->fields('lmp')->condition('uid', $GLOBALS['user']->uid)->orderBy('id', 'DESC')->range(0, 1)->execute();
+          //Fetch object from $result
+          $proposal_data = $result->fetchObject();
+          if (!$proposal_data) {
+            //If no data is present in table, no proposal submitted.
+            $proposal_status = l('No Proposal Yet', 'lab_migration/proposal');
+          }
+          else {
+            //If data is found in table
+            switch ($proposal_data->approval_status) {
+                //Switch proposal data for the status of proposal.
+              case 0:
+                $proposal_status = (t('Proposal is awaiting for approval.'));
+                break;
+
+              case 1:
+                $proposal_status = t('Proposal Approved');
+                break;
+
+              case 2:
+                //Problem: No Dis-approve state found.
+                $proposal_status = t('Proposal has been dis-approved.');
+                break;
+
+              case 3:
+                $proposal_status = t('Proposal Rejected.');
+                break;
+
+              default:
+                $proposal_status = t('Error! Contact Admin.<p><b> Code: ') . $proposal_data->approval_status . '<b><p>';
+            }
+          }
+          //Edit content of block
+          $block['content'] = array(
+            /*							'admin' => array (
+//								'#prefix' => '<p>',
+								'#suffix' => '<br />',
+								'#markup' => t('You are not admin'),
+							),*/
+            /*			'name' => array(
+								'#suffix' => '<br />',
+								'#markup' => drupal_strtoupper($GLOBALS['user']->name),
+								'#description' => t('Displays the name of authenticated user.'),
+							),*/
+            'email' => array(
+              '#prefix' => '<b><i>',
+              '#suffix' => '</i><b><br />',
+              '#markup' => t($GLOBALS['user']->mail),
+              '#description' => t('Displays the name of authenticated user.'),
+            ),
+            'update_contact_details' => array(
+              '#suffix' => '<br />',
+              '#markup' => l('Update Contact Details', '/mycontact'),
+              '#description' => t('Link for updating contact details.'),
+            ),
+            'eligibility_test' => array(
+              '#suffix' => '<br />',
+              '#markup' => l('Eligibility Test', '/tbc_external_review/eligibility_test'),
+              '#description' => t('Link for eligibility test'),
+            ),
+            'certificates' => array(
+              '#suffix' => '<br />',
+              '#markup' => l('List of Certificates', '/certificates'),
+              '#description' => t('Link for certificates.'),
+            ),
+            'logout' => array(
+              '#suffix' => '<br />',
+              '#markup' => l('Log Out', '/user/logout'),
+              '#description' => t('Link for loggin out user.'),
+            ),
+            'lab_migration' => array(
+              '#prefix' => '<hr />',
+              '#suffix' => '<br />',
+              '#markup' => l('Lab Migration', 'user/lab_migration'),
+              '#description' => 'Display Lab Migration link',
+            ),
+            'Text Book Companion' => array(
+              '#markup' => l('Text Book Companion', 'user/text_book_companion'),
+              '#description' => 'Display text book companion link',
+            ),
+          );
+        }
+      }
+      else {
+        //If user is not authenticated display 'ACCESS DENIED'
+        $block['subject'] = t('ACCESS DENIED');
+      }
+      break;
+  }
+  return $block;
+}
+
+function user_dash_user_is_admin() {
+  //This function checks if user is admin or not.
+  global $user;
+  if (is_array($user->roles) && in_array('administrator', array_values($user->roles))) {
+    //If admin role is found in user's roles return TRUE.
+    //			print "TRUE";
+    return TRUE;
+  }
+  //If admin role is not found return FALSE.
+  //		print "FALSE";
+  return FALSE;
+}
+
+/**
+ * Implements hook_menu()
+ */
+function user_dash_menu() {
+  $items['user/lab_migration'] = array(
+    'title' => t('Lab Migration Proposals'),
+    'page callback' => 'user_lab_migration_proposals',
+    'access arguments' => array('access user_dash'),
+    'file' => 'user_dash_lab_migration.inc',
+  );
+
+  $items['user/text_book_companion'] = array(
+    'title' => t('Text Book Proposals'),
+    'page callback' => 'user_text_book_companion_proposals',
+    'access arguments' => array('access user_dash'),
+    'file' => 'user_dash_text_book_companion.inc',
+  );
+
+  return $items;
+}
+
