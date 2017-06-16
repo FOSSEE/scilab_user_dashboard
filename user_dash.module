@@ -40,47 +40,47 @@ function user_dash_block_view($delta = '') {
 
         //Subject in form of link to redirect to current user's page
         $block['subject'] = "<a href='http://localhost/scilab_in_2015/user/" . $GLOBALS['user']->uid . "'>" . $GLOBALS['user']->name . "'s</a> Dashboard";
-        if (user_dash_user_is_admin($GLOBALS['user'])) {
-          //If User is admin then display content accordingly.
-          $block['content'] = array(
-            'admin' => array(
-              //								'#prefix' => '<p>',
-              '#suffix' => '<br />',
-              '#markup' => t('You are Admin'),
-              '#description' => t('Display whether the user is admin'),
-            ),
-            'email' => array(
-              //								'#prefix' => '<p>',
-              '#suffix' => '<br />',
-              '#markup' => t($GLOBALS['user']->mail),
-              '#description' => t('Display the email id of current user admin'),
-            ),
-            /*							'table' => array(
-								'#prefix' => '<table>',
-								'#suffix' => '</table>',
-								'#markup' => array (
-									'tr1' => array (
-										'#prefix' => '<tr>',
-										'#suffix' => '</tr>',
-										'#markup' => array (
-											'td11' => array(
-												'#prefix' => '<td>',
-												'#suffix' => '</td>',
-												'#markup' => 'Value of 11',
-											),
-										),
-									),
-								),
-							)*/
-            'table' => array(
-              '#theme' => 'table',
-              '#header' => array('email', 'abc'),
-              '#rows' => array('email', 'abc'),
-              '#description' => t('Display the table contaning {}'),
-            ),
-          );
-        }
-        else {
+//         if (user_dash_user_is_admin($GLOBALS['user'])) {
+//           //If User is admin then display content accordingly.
+//           $block['content'] = array(
+//             'admin' => array(
+//               //								'#prefix' => '<p>',
+//               '#suffix' => '<br />',
+//               '#markup' => t('You are Admin'),
+//               '#description' => t('Display whether the user is admin'),
+//             ),
+//             'email' => array(
+//               //								'#prefix' => '<p>',
+//               '#suffix' => '<br />',
+//               '#markup' => t($GLOBALS['user']->mail),
+//               '#description' => t('Display the email id of current user admin'),
+//             ),
+//             /*							'table' => array(
+// 								'#prefix' => '<table>',
+// 								'#suffix' => '</table>',
+// 								'#markup' => array (
+// 									'tr1' => array (
+// 										'#prefix' => '<tr>',
+// 										'#suffix' => '</tr>',
+// 										'#markup' => array (
+// 											'td11' => array(
+// 												'#prefix' => '<td>',
+// 												'#suffix' => '</td>',
+// 												'#markup' => 'Value of 11',
+// 											),
+// 										),
+// 									),
+// 								),
+// 							)*/
+//             'table' => array(
+//               '#theme' => 'table',
+//               '#header' => array('email', 'abc'),
+//               '#rows' => array('email', 'abc'),
+//               '#description' => t('Display the table contaning {}'),
+//             ),
+//           );
+//         }
+//         else {
           //If user is not Admin render content accordingly.
           //Query database for user proposls details in table 'lab_migration_proposal'
           $result = db_select('lab_migration_proposal', 'lmp')->fields('lmp')->condition('uid', $GLOBALS['user']->uid)->orderBy('id', 'DESC')->range(0, 1)->execute();
@@ -164,7 +164,7 @@ function user_dash_block_view($delta = '') {
               '#description' => 'Display text book companion link',
             ),
           );
-        }
+//         }
       }
       else {
         //If user is not authenticated display 'ACCESS DENIED'
@@ -173,19 +173,6 @@ function user_dash_block_view($delta = '') {
       break;
   }
   return $block;
-}
-
-function user_dash_user_is_admin() {
-  //This function checks if user is admin or not.
-  global $user;
-  if (is_array($user->roles) && in_array('administrator', array_values($user->roles))) {
-    //If admin role is found in user's roles return TRUE.
-    //			print "TRUE";
-    return TRUE;
-  }
-  //If admin role is not found return FALSE.
-  //		print "FALSE";
-  return FALSE;
 }
 
 /**
