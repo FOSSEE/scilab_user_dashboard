@@ -3,10 +3,11 @@
  * @file
  * User can history of lab migration proposals.
  */
-function user_lab_migration_proposals_progress($approval_status = 0) {
+function user_lab_migration_proposals_progress() {
 drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/custom.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
 drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/custom_lab_migration.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
-drupal_add_js(drupal_get_path('module', 'user_dash') . '/js/progressBar.js');
+drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/rejected.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+drupal_add_js(drupal_get_path('module', 'user_dash') . '/js/progressBar.js', 'file');
 
   return '
 			<div id="progressbar_container">
@@ -16,7 +17,8 @@ drupal_add_js(drupal_get_path('module', 'user_dash') . '/js/progressBar.js');
 					<li id="node3"><p class="hidden"><span id="approved">approved waiting for Code Submission</span><span id="rejected">Proposal Rejected</span></p></li>
 					<li id="node4"><p class="hidden">Solution received and approved. Lab is completed</p></li>
 				</ul>
-			</div>';
+			</div>
+		</div>';
 }
 
 function user_lab_migration_proposals() {
@@ -29,8 +31,8 @@ function user_lab_migration_proposals() {
   $query->orderBy('id', 'DESC');
   if (user_dash_user_is_admin($GLOBALS['user'])){
 	$proposal_q = $query->execute();
-	$contents .= '<h4>Selected Proposal</h4>';
- 	$contents .= user_lab_migration_proposals_progress();
+	$contents .= '<div id="selected_proposal" style="display: none"><h4>Selected Proposal</h4>';
+	$contents .= user_lab_migration_proposals_progress();
 	$contents .= '<h4>All Proposals</h4>';
 
 	while ($proposal_data = $proposal_q->fetchObject()) {
@@ -41,12 +43,12 @@ function user_lab_migration_proposals() {
 		$proposal_data->lab_title,
 		$proposal_data->department,
 		$approval_status,
-		'<a href="#" onclick=selectProposal_LM('.$approval_status.')>Select</a>'
+		'<a href="#" onclick=selectProposal_LM('.$proposal_data->approval_status.')>Select</a>'
 		);
 	}
 	if(!$proposal_rows){
 		//If no previous proposal are found.
-		return $contents .= t('There are no previous proposal.');
+		return $contents .= t('There are no proposal.');
 	}
 
 	$proposal_header = array(
@@ -67,9 +69,9 @@ function user_lab_migration_proposals() {
 		$contents .= t('You have not submitted any proposal yet. ') . l('Click here', 'lab_migration/proposal') . t(' to submit a proposal.');
 		return $contents;
 	}
-	$contents .= '<h4>Current Proposal</h4> Proposal ID: ' . $p->id;
-	$contents .= user_lab_migration_proposals_progress($p->approval_status);
-	$contents .= '<h4>Previous Proposals</h4>';
+	$contents .= '<div id="selected_proposal"><h4>Current Proposal</h4> Proposal ID: ' . $p->id;
+	$contents .= user_lab_migration_proposals_progress();
+	$contents .= '<h4>Previous Proposals</h4><script>selectProposal_LM('.$p->approval_status.');</script>';
 
 	while ($proposal_data = $proposal_q->fetchObject()) {
 		$approval_status = getApprovalStatus($proposal_data->approval_status);
