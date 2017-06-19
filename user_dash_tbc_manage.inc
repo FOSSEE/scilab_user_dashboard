@@ -23,12 +23,12 @@ function user_tbc_progress() {
 		</div>';
 }
 
-function user_text_book_companion_proposals() {
+function user_tbc_manage_proposals() {
 	$contents='';
 
-/* Get proposal db where user id is of current user.*/
-$book_rows = array();
-		$result = db_query('SELECT textbook_companion_proposal.id,
+	/* Get proposal db where user id is of current user.*/
+	$book_rows = array();
+	$result = db_query('SELECT textbook_companion_proposal.id,
 							textbook_companion_preference.book_status,
 							textbook_companion_proposal.new_proposal_status,
 							textbook_companion_preference.book,
@@ -36,32 +36,30 @@ $book_rows = array();
 							textbook_companion_preference.author,
 							textbook_companion_preference.year
 							FROM {textbook_companion_proposal} INNER JOIN {textbook_companion_preference} ON textbook_companion_preference.proposal_id=textbook_companion_proposal.id
-							where textbook_companion_proposal.uid= :uid;',
-							array(':uid' => $GLOBALS['user']->uid));
-			//Fetch the first object(proposal) for displaying progress bar.
-		$p = $result->fetchObject();
-		if (!$p) {
-			//If no proposal Found
-			$contents .= t('You have not submitted any books proposal.') . l('Click here', 'book_proposal') . t(' to submit.');
-			return $contents;
-		}
-		$contents .= '<div id="selected_proposal"><h4>Current Proposal:</h4> Book: ' . $p->book . '<br /> Proposal ID: ' . $p->id;
+							ORDER BY textbook_companion_proposal.id DESC;');
+
+		$contents .= '<div id="selected_proposal" style="display:none;"><h4>Current Proposal</h4>';
 		//   dpm(get_defined_vars());
 		$contents .= user_tbc_progress();
 
-		$contents .= '<h4>Previous Proposals</h4><script>selectProposal_TBC('.$p->new_proposal_status.','.$p->book_status.');</script>';
+		$contents .= '<h4>All Proposals</h4>';
 
 		while ($book_data = $result->fetchObject()) {
 			/* get preference */
 
+
+			/*$preference_q = db_query("SELECT * FROM textbook_companion_preference WHERE proposal_id = %d AND approval_status = 1 LIMIT 1", $proposal_data->id);
+					$preference_data = db_fetch_object($preference_q);*/
 			$book_status = getBookStatus($book_data->book_status);
+			$proposal_status = getProposalStatus($book_data->new_proposal_status);
 			$book_rows[] = array(
 				$book_data->id,
 				$book_data->book . '<br> <em>by ' . $book_data->author . '</em>',
 				$book_data->edition,
 				$book_data->year,
-				$book_data->new_proposal_status,
+				$proposal_status,
 				$book_status,
+				'<a href="#" onclick="selectProposal_TBC('.$book_data->new_proposal_status.','.$book_data->book_status.');">Select</a>',
 			);
 		}
 		//$proposal_data = $proposal_q->fetchObject()
@@ -69,7 +67,7 @@ $book_rows = array();
 
 		if(!$book_rows){
 			//If no previous proposal are found.
-			return $contents .= t('There are no previous proposal.');
+			return $contents .= t('There are no proposal.');
 		}
 
 		//!$proposal_rows
@@ -80,13 +78,14 @@ $book_rows = array();
 			'Year',
 			'Proposal Status',
 			'Book Status',
+			'Select Proposal',
 		);
-
-$contents .= theme('table', array(
-	'header' => $book_header,
-	'rows' => $book_rows,
+		
+	$contents .= theme('table', array(
+		'header' => $book_header,
+		'rows' => $book_rows,
 	));
-return $contents;
+	return $contents;
 }
 
 function getProposalStatus($proposal_status = 0){

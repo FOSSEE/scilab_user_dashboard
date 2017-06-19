@@ -1,7 +1,7 @@
 <?php
 /**
 * @file
-* User can view history of lab migration proposals.
+* User can view and manage all lab migration proposals.
 */
 function user_lab_migration_proposals_progress() {
 drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/custom.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
@@ -21,7 +21,7 @@ return '
 		</div>';
 }
 
-function user_lab_migration_proposals() {
+function user_lab_migration_manage_proposals() {
 
 	$contents = '';
 	//Get all proposal of current user(history) in table form.
@@ -29,16 +29,10 @@ function user_lab_migration_proposals() {
 	$query = db_select('lab_migration_proposal');
 	$query->fields('lab_migration_proposal');
 	$query->orderBy('id', 'DESC');
-	$query->condition('uid', $GLOBALS['user']->uid);
 	$proposal_q = $query->execute();
-	$p = $proposal_q->fetchObject();
-	if (!$p) {
-		$contents .= t('You have not submitted any proposal yet. ') . l('Click here', 'lab_migration/proposal') . t(' to submit a proposal.');
-		return $contents;
-	}
-	$contents .= '<div id="selected_proposal"><h4>Current Proposal</h4> Proposal ID: ' . $p->id;
+	$contents .= '<div id="selected_proposal" style="display: none"><h4>Selected Proposal</h4>';
 	$contents .= user_lab_migration_proposals_progress();
-	$contents .= '<h4>Previous Proposals</h4><script>selectProposal_LM('.$p->approval_status.');</script>';
+	$contents .= '<h4>All Proposals</h4>';
 
 	while ($proposal_data = $proposal_q->fetchObject()) {
 		$approval_status = getApprovalStatus($proposal_data->approval_status);
@@ -48,11 +42,12 @@ function user_lab_migration_proposals() {
 		$proposal_data->lab_title,
 		$proposal_data->department,
 		$approval_status,
+		'<a href="#" onclick=selectProposal_LM('.$proposal_data->approval_status.')>Select</a>'
 		);
 	}
 	if(!$proposal_rows){
 		//If no previous proposal are found.
-		return $contents .= t('There are no previous proposal.');
+		return $contents .= t('There are no proposal.');
 	}
 
 	$proposal_header = array(
@@ -61,14 +56,14 @@ function user_lab_migration_proposals() {
 		'Title of the Lab',
 		'Department',
 		'Status',
+		'Select Proposal'
 	);
-$contents .= theme('table', array(
+	$contents .= theme('table', array(
 	'header' => $proposal_header,
 	'rows' => $proposal_rows,
 	));
-return $contents;
+	return $contents;
 }
-
 
 function getApprovalStatus($approval_status = 0){
 	switch ($approval_status) {

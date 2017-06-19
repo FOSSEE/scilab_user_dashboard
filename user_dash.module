@@ -1,88 +1,78 @@
 <?php
 /**
- * @file
- * Creates a block and menu links for user dashboard access.
- */  
+* @file
+* Creates a block and menu links for user dashboard access.
+*/  
 //Adding new Permission
 function user_dash_permission() { return array(
-  'access user_dash' => array(
-    'title' => t('Access User Dashboard'),
-    'description' => t('Display the user dashboard'),
-  ),
-  'access user_dash_lm manage' => array(
-    'title' => t('Access User DashBoard LM Manage'),
-    'description' => t('It allows to access and manage all the proposals related to LM'),
-  ),
-  'access user_dash_tbc manage' => array(
-    'title' => t('Access User DashBoard TBC Manage'),
-    'description' => t('It allows to access and manage all the proposal related to TBC'),
-  ),
+'access user_dash' => array(
+	'title' => t('Access User Dashboard'),
+	'description' => t('Display the user dashboard'),
+),
+'access user_dash_lm manage' => array(
+	'title' => t('Access User DashBoard LM Manage'),
+	'description' => t('It allows to access and manage all the proposals related to LM'),
+),
+'access user_dash_tbc manage' => array(
+	'title' => t('Access User DashBoard TBC Manage'),
+	'description' => t('It allows to access and manage all the proposal related to TBC'),
+),
 );
 }
 
 /**
- * Implements hook_block_info()
- */
+* Implements hook_block_info()
+*/
 function user_dash_block_info() {
-  $blocks = array();
-  $blocks['user_dash'] = array(
-    'info' => t('User Dashboard'),
-    'cache' => DRUPAL_NO_CACHE,
-  );
-  return $blocks;
+$blocks = array();
+$blocks['user_dash'] = array(
+	'info' => t('User Dashboard'),
+	'cache' => DRUPAL_NO_CACHE,
+);
+return $blocks;
 }
 
 /**
- * Implements hook_block_view()
- */
+* Implements hook_block_view()
+*/
 function user_dash_block_view($delta = '') {
-  $block = array();
-  //Switch for different Blocks
-  switch ($delta) {
-    case 'user_dash':
-      //Case if user_dash block is accessed.
-      if (user_access('access user_dash')) {
-        //Check for user User Access (Access Mantained by Drupal).
-        //Subject in form of link to redirect to current user's page
-        $block['subject'] = "<a href='http://localhost/scilab_in_2015/user/" . $GLOBALS['user']->uid . "'>" . $GLOBALS['user']->name . "'s</a> Dashboard";
-          //Edit content of block
+$block = array();
+//Switch for different Blocks
+switch ($delta) {
+	case 'user_dash':
+	//Case if user_dash block is accessed.
+	if (user_access('access user_dash')) {
+		//Check for user User Access (Access Mantained by Drupal).
+		//Subject in form of link to redirect to current user's page
+		$block['subject'] = "<a href='http://localhost/scilab_in_2015/user/" . $GLOBALS['user']->uid . "'>" . $GLOBALS['user']->name . "'s</a> Dashboard";
+		//Edit content of block
 		$block['content'] = array(
-            'email' => array(
-              '#prefix' => '<b><i>',
-              '#suffix' => '</i><b><br />',
-              '#markup' => t($GLOBALS['user']->mail),
-              '#description' => t('Displays the name of authenticated user.'),
-            ),
-            'update_contact_details' => array(
-              '#suffix' => '<br />',
-              '#markup' => l('Update Contact Details', '/mycontact'),
-              '#description' => t('Link for updating contact details.'),
-            ),
-            'eligibility_test' => array(
-              '#suffix' => '<br />',
-              '#markup' => l('Eligibility Test', '/tbc_external_review/eligibility_test'),
-              '#description' => t('Link for eligibility test'),
-            ),
-            'certificates' => array(
-              '#suffix' => '<br />',
-              '#markup' => l('List of Certificates', '/certificates'),
-              '#description' => t('Link for certificates.'),
-            ),
-            'logout' => array(
-              '#suffix' => '<br />',
-              '#markup' => l('Log Out', '/user/logout'),
-              '#description' => t('Link for loggin out user.'),
-            ),
-            'lab_migration' => array(
-              '#prefix' => '<hr />',
-              '#suffix' => '<br />',
-              '#markup' => l('Lab Migration', 'user/lab_migration'),
-              '#description' => 'Display Lab Migration link',
-            ),
-            'Text Book Companion' => array(
-              '#markup' => l('Text Book Companion', 'user/text_book_companion'),
-              '#description' => 'Display text book companion link',
-            ),
+			'email' => array(
+			'#prefix' => '<b><i>',
+			'#suffix' => '</i><b><br />',
+			'#markup' => t($GLOBALS['user']->mail),
+			'#description' => t('Displays the name of authenticated user.'),
+			),
+			'update_contact_details' => array(
+			'#suffix' => '<br />',
+			'#markup' => l('Update Contact Details', '/mycontact'),
+			'#description' => t('Link for updating contact details.'),
+			),
+			'eligibility_test' => array(
+			'#suffix' => '<br />',
+			'#markup' => l('Eligibility Test', '/tbc_external_review/eligibility_test'),
+			'#description' => t('Link for eligibility test'),
+			),
+			'certificates' => array(
+			'#suffix' => '<br />',
+			'#markup' => l('List of Certificates', '/certificates'),
+			'#description' => t('Link for certificates.'),
+			),
+			'logout' => array(
+			'#suffix' => '<br />',
+			'#markup' => l('Log Out', '/user/logout'),
+			'#description' => t('Link for loggin out user.'),
+			),
 		);
 		$block['content']['lab_migration'] = array(
 			'#prefix' => '<hr />',
@@ -105,52 +95,49 @@ function user_dash_block_view($delta = '') {
 		if(user_access('access user_dash_tbc manage')){
 			$block['content']['text_book_manage'] = array(
 				'#suffix' => '<br />',
-				'#markup' => l('Text Book Companion', 'admin/textbook_companion_manage'),
+				'#markup' => l('Text Book Companion Manage', 'admin/textbook_companion_manage'),
 				'#description' => 'Display Text Book Companion Manage link',
 			);
 		}
-	  }
-      else {
-        //If user is not authenticated display 'ACCESS DENIED'
-        $block['subject'] = t('ACCESS DENIED');
-      }
-      break;
-  }
-  return $block;
+	}
+	else {
+		//If user is not authenticated display 'ACCESS DENIED'
+		$block['subject'] = t('ACCESS DENIED');
+	}
+	break;
+}
+return $block;
 }
 
 /**
- * Implements hook_menu()
- */
+* Implements hook_menu()
+*/
 function user_dash_menu() {
-  $items['user/lab_migration'] = array(
-    'title' => t('Lab Migration Proposals'),
-    'page callback' => 'user_lab_migration_proposals',
-    'access arguments' => array('access user_dash'),
-    'file' => 'user_dash_lab_migration.inc',
-  );
-  
-  $items['admin/lab_migration_manage'] = array(
+$items['user/lab_migration'] = array(
+	'title' => t('Lab Migration Proposals'),
+	'page callback' => 'user_lab_migration_proposals',
+	'access arguments' => array('access user_dash'),
+	'file' => 'user_dash_lab_migration.inc',
+);
+
+$items['admin/lab_migration_manage'] = array(
 	'title' => t('Lab Migration Manage Proposals'),
 	'page callback' => 'user_lab_migration_manage_proposals',
-	'access arguments' => array('access user_dash_lm manage',
-	'file' => 'user_dash_lm_mange.inc',
-  )
-
-  $items['user/text_book_companion'] = array(
-    'title' => t('Text Book Proposals'),
-    'page callback' => 'user_text_book_companion_proposals',
-    'access arguments' => array('access user_dash'),
-    'file' => 'user_dash_text_book_companion.inc',
-  );
-  $items['admin/textbook_companion_manage'] = array(
+	'access arguments' => array('access user_dash_lm manage'),
+	'file' => 'user_dash_lm_manage.inc',
+);
+$items['user/text_book_companion'] = array(
+	'title' => t('Text Book Proposals'),
+	'page callback' => 'user_text_book_companion_proposals',
+	'access arguments' => array('access user_dash'),
+	'file' => 'user_dash_text_book_companion.inc',
+);
+$items['admin/textbook_companion_manage'] = array(
 	'title' => t('TextBook Companion Manage Proposals'),
 	'page callback' => 'user_tbc_manage_proposals',
-	'access arguments' => array('access user_dash_tbc manage',
-	'file' => 'user_dash_tbc_mange.inc',
-  )
-
-
-  return $items;
+	'access arguments' => array('access user_dash_tbc manage'),
+	'file' => 'user_dash_tbc_manage.inc',
+);
+return $items;
 }
 
