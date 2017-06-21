@@ -1,5 +1,5 @@
 function selectProposal_LM(proposal_status = 0){
-	
+	//Fills the progressBar with the proposal_status.
 	console.log("selectProposal_LM called: " + proposal_status);
 	document.getElementById('selected_proposal').style.display = 'initial';
 	resetProgressBar(4);
@@ -21,10 +21,8 @@ function selectProposal_LM(proposal_status = 0){
 }
 
 function selectProposal_TBC(proposal_status=0, book_status=0){
+	//Fills the progressBar with proposal_status and book_status.
 	console.log("selectProposal_TBC called: " + proposal_status + ", " + book_status);
-// 	var el = this.parentNode.parentNode;
-// 	if(el.name == "tr")
-// 		el.style.backgroundColor = '#eff';
 	document.getElementById('selected_proposal').style.display = 'initial';
 	resetProgressBar(6);
 	makeNodeActive('node1');
@@ -57,6 +55,7 @@ function selectProposal_TBC(proposal_status=0, book_status=0){
 }
 
 function resetProgressBar(nodes_n){
+	//Helper function to reset the progress bar.
 	for(var i=1; i <= nodes_n; i++){
 		document.getElementById('node' + i).classList.remove('active');
 		document.getElementById('node' + i).classList.remove('active_rej');
@@ -66,10 +65,12 @@ function resetProgressBar(nodes_n){
 }
 
 function makeNodeActive(id){
+	//Helper function to make node active.
 	document.getElementById(id).classList.add('active');
 }
 
 function makeNodeRejected(id_accepted, id_rejected){
+	//Helper function to make node rejected.
 	document.getElementById(id_accepted).style.display = 'none';
 	document.getElementById(id_rejected).style.display = 'block';
 	document.getElementById(id_rejected).parentNode.parentNode.classList.add('active_rej');

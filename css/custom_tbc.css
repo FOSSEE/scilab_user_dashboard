@@ -1,3 +1,5 @@
+/* Change the width to change the number of nodes displayed in node. (100/n) */
+/* This is for tbc. */
 #progressbar li {
 	width: 16%;
 }

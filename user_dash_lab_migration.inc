@@ -3,26 +3,10 @@
 * @file
 * User can view history of lab migration proposals.
 */
-function user_lab_migration_proposals_progress() {
-drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/custom.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
-drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/custom_lab_migration.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
-drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/rejected.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
-drupal_add_js(drupal_get_path('module', 'user_dash') . '/js/progressBar.js', 'file');
-
-return '
-			<div id="progressbar_container">
-				<ul id="progressbar">
-					<li id="node1"><p class="hidden">Submit Proposal</p></li>
-					<li id="node2"><p class="hidden">Proposal waiting for approval</p></li>
-					<li id="node3"><p class="hidden"><span id="approved">approved waiting for Code Submission</span><span id="rejected">Proposal Rejected</span></p></li>
-					<li id="node4"><p class="hidden">Solution received and approved. Lab is completed</p></li>
-				</ul>
-			</div>
-		</div>';
-}
 
 function user_lab_migration_proposals() {
 if (user_access('access user_dash')) {
+
 	//Empty string for filling content in it.
 	$contents = '';
 	//Empty array for getting table rows.
@@ -39,12 +23,14 @@ if (user_access('access user_dash')) {
 	$proposal_q = $query->execute();
 	//Now fetch first row from results. 
 	$p = $proposal_q->fetchObject();
+	
 	//Check for if data is present is fetched or not.
 	if (!$p) {
 		//If no data is fetched than it means that no proposal has been submitted by that user.
 		$contents .= t('You have not submitted any proposal yet. ') . l('Click here', 'lab_migration/proposal') . t(' to submit a proposal.');
 		return $contents;
 	}
+	
 	//If data is fetched then display the propsal id.
 	$contents .= '<div id="selected_proposal"><h4>Current Proposal</h4> Proposal ID: ' . $p->id;
 	//Get the progressBar and append it to contents.
@@ -65,6 +51,7 @@ if (user_access('access user_dash')) {
 			$approval_status,
 		);
 	}
+	
 	//If no row is fetched from remaining results then return 'No previous proposals'.
 	if(!$proposal_rows){
 		//If no previous proposal are found.
@@ -78,17 +65,35 @@ if (user_access('access user_dash')) {
 		'Department',
 		'Status',
 	);
+
 	//Create a table in form html and append it to contents.
 	$contents .= theme('table', array(
 		'header' => $proposal_header,
 		'rows' => $proposal_rows,
 	));
-	
+
 	//return contents to render on page.
 	return $contents;
 }
 }
 
+function user_lab_migration_proposals_progress() {
+drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/custom.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/custom_lab_migration.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/rejected.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+drupal_add_js(drupal_get_path('module', 'user_dash') . '/js/progressBar.js', 'file');
+
+return '
+			<div id="progressbar_container">
+				<ul id="progressbar">
+					<li id="node1"><p class="hidden">Submit Proposal</p></li>
+					<li id="node2"><p class="hidden">Proposal waiting for approval</p></li>
+					<li id="node3"><p class="hidden"><span id="approved">approved waiting for Code Submission</span><span id="rejected">Proposal Rejected</span></p></li>
+					<li id="node4"><p class="hidden">Solution received and approved. Lab is completed</p></li>
+				</ul>
+			</div>
+		</div>';
+}
 
 function getApprovalStatus($approval_status = 0){
 	//Returns the status(in string) of approval status( fetched from db).
