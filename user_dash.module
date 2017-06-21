@@ -3,7 +3,9 @@
 * @file
 * Creates a block and menu links for user dashboard access.
 */  
-//Adding new Permission
+
+
+//Adding new Permissions
 function user_dash_permission() { return array(
 'access user_dash' => array(
 	'title' => t('Access User Dashboard'),
@@ -21,20 +23,64 @@ function user_dash_permission() { return array(
 }
 
 /**
+* Implements hook_menu()
+*/
+//Creates various menu links for managing proposals.
+function user_dash_menu() {
+//Manage/view proposal submitted by the current user (Lab Migration). 
+$items['user/lab_migration'] = array(
+	'title' => t('Lab Migration Proposals'),
+	'page callback' => 'user_lab_migration_proposals',
+	'access arguments' => array('access user_dash'),
+	'file' => 'user_dash_lab_migration.inc',
+);
+
+//Manage/view proposal submitted by all the users (Lab Migration). 
+$items['admin/lab_migration_manage'] = array(
+	'title' => t('Lab Migration Manage Proposals'),
+	'page callback' => 'user_lab_migration_manage_proposals',
+	'access arguments' => array('access user_dash_lm manage'),
+	'file' => 'user_dash_lm_manage.inc',
+);
+
+//Manage/view proposal submitted by the current user (TextBook Companion). 
+$items['user/text_book_companion'] = array(
+	'title' => t('Text Book Proposals'),
+	'page callback' => 'user_text_book_companion_proposals',
+	'access arguments' => array('access user_dash'),
+	'file' => 'user_dash_text_book_companion.inc',
+);
+
+//Manage/view proposal submitted by the all users (TextBook Companion). 
+$items['admin/textbook_companion_manage'] = array(
+	'title' => t('TextBook Companion Manage Proposals'),
+	'page callback' => 'user_tbc_manage_proposals',
+	'access arguments' => array('access user_dash_tbc manage'),
+	'file' => 'user_dash_tbc_manage.inc',
+);
+return $items;
+}
+
+
+/**
 * Implements hook_block_info()
 */
+//Info for block.
 function user_dash_block_info() {
 $blocks = array();
 $blocks['user_dash'] = array(
 	'info' => t('User Dashboard'),
 	'cache' => DRUPAL_NO_CACHE,
+	'region' => 'sidebar_first',
 );
 return $blocks;
 }
 
+
 /**
 * Implements hook_block_view()
 */
+//This function displays the blocks contents.
 function user_dash_block_view($delta = '') {
 $block = array();
 //Switch for different Blocks
@@ -81,6 +127,7 @@ switch ($delta) {
 			'#description' => 'Display Lab Migration link',
 		);
 		if(user_access('access user_dash_lm manage')){
+			//Displays link when 'user_dash_lm manage' permission is available to user.
 			$block['content']['lab_migration_manage'] = array(
 				'#suffix' => '<br />',
 				'#markup' => l('Lab Migration Manage', 'admin/lab_migration_manage'),
@@ -93,6 +140,7 @@ switch ($delta) {
 			'#description' => 'Display TextBook Companion link',
 		);
 		if(user_access('access user_dash_tbc manage')){
+			//Displays link when 'user_dash_tbc manage' permission is available to user.
 			$block['content']['text_book_manage'] = array(
 				'#suffix' => '<br />',
 				'#markup' => l('Text Book Companion Manage', 'admin/textbook_companion_manage'),
@@ -108,36 +156,3 @@ switch ($delta) {
 }
 return $block;
 }
-
-/**
-* Implements hook_menu()
-*/
-function user_dash_menu() {
-$items['user/lab_migration'] = array(
-	'title' => t('Lab Migration Proposals'),
-	'page callback' => 'user_lab_migration_proposals',
-	'access arguments' => array('access user_dash'),
-	'file' => 'user_dash_lab_migration.inc',
-);
-
-$items['admin/lab_migration_manage'] = array(
-	'title' => t('Lab Migration Manage Proposals'),
-	'page callback' => 'user_lab_migration_manage_proposals',
-	'access arguments' => array('access user_dash_lm manage'),
-	'file' => 'user_dash_lm_manage.inc',
-);
-$items['user/text_book_companion'] = array(
-	'title' => t('Text Book Proposals'),
-	'page callback' => 'user_text_book_companion_proposals',
-	'access arguments' => array('access user_dash'),
-	'file' => 'user_dash_text_book_companion.inc',
-);
-$items['admin/textbook_companion_manage'] = array(
-	'title' => t('TextBook Companion Manage Proposals'),
-	'page callback' => 'user_tbc_manage_proposals',
-	'access arguments' => array('access user_dash_tbc manage'),
-	'file' => 'user_dash_tbc_manage.inc',
-);
-return $items;
-}
-
