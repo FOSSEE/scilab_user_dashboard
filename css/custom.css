@@ -88,6 +88,6 @@
 /* Creates a shadow when we use hover mouse over node's block */
 #progressbar li.active:hover:before {
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(0, 255, 0, 0.67);
-	-moz-box-shadow:    0px 0px 10px 0px rgba(0, 255, 0, 0.67);
+/* 	-moz-box-shadow:    0px 0px 10px 0px rgba(0, 255, 0, 0.67); */
 	box-shadow:         0px 0px 10px 0px rgba(0, 255, 0, 0.67);
 }
