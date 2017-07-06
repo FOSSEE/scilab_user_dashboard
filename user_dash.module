@@ -117,7 +117,7 @@ function user_dash_block_view($delta = '') {
 #          ),
           'eligibility_test' => array(
             '#suffix' => '<br />',
-            '#markup' => l('Eligibility Test', '/tbc_external_review/eligibility_test'),
+            '#markup' => l('Eligibility Test for Reviewer' , '/tbc_external_review/eligibility_test'),
             '#description' => t('Link for eligibility test'),
           ),
           'certificates' => array(
