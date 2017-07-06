@@ -31,7 +31,9 @@ function user_text_book_companion_proposals() {
       return $contents;
     }
     //Display current proposal details.
-    $contents .= '<div id="selected_proposal"><h4>Current Proposal:</h4> Book: ' . $p->book . '<br /> Proposal ID: ' . $p->id;
+    $contents .= '<div id="selected_proposal"><h4>Current Proposal:</h4>Proposal ID: ' . $p->id;
+    $contents .= '<br />Book: '. $p->book .' [ ' . $p->edition . ' ]';
+    $contents .= '<br /><em>by ' . $p->author;
     //Create a empty progressBar and append to html contents.
     $contents .= user_tbc_progress();
     //Call the javascript function and fill the progress bar.
@@ -84,7 +86,7 @@ function user_tbc_progress() {
 				<ul id="progressbar">
 					<li id="node1"><p class="hidden">Submit Book Proposal</p></li>
 					<li id="node2"><p class="hidden">Proposal Recieved, Waiting for approval</p></li>
-					<li id="node3"><p class="hidden"><span id="approved">Proposal Approved, Start submitting codes</span><span id="rejected">Proposal Rejected</span></p></li>
+					<li id="node3"><p class="hidden"><span id="approved">Proposal Approved, Start '.l('submitting codes','/textbook_companion/code').'</span><span id="rejected">Proposal Rejected</span></p></li>
 					<li id="node4"><p class="hidden">Code received. Under review</p></li>
 					<li id="node5"><p class="hidden">Code reviewed and Completed Book</p></li>
 					<li id="node6"><p class="hidden">Book Completed</p></li>
