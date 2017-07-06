@@ -89,8 +89,13 @@ function user_dash_block_view($delta = '') {
       //Case if user_dash block is accessed.
       if (user_access('access user_dash')) {
         //Check for user User Access (Access Mantained by Drupal).
+        
+        //Add css for the block
+        drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/block.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+
         //Subject in form of link to redirect to current user's page
         $block['subject'] = "<a href='http://localhost/scilab_in_2015/user/" . $GLOBALS['user']->uid . "'>" . $GLOBALS['user']->name . "'s</a> Dashboard";
+
         //Edit content of block
         $block['content'] = array(
           'email' => array(
@@ -103,6 +108,7 @@ function user_dash_block_view($delta = '') {
             '#prefix' => '<b>',
             '#suffix' => '</b><br />',
             '#markup' => t('Last Login: ') . format_date($GLOBALS['user']->login,'small'),
+            '#description' => t('Display the last login time and date.'),
           ),
 #          'update_contact_details' => array(
 #            '#suffix' => '<br />',
