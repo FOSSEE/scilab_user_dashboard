@@ -120,30 +120,51 @@ function user_dash_block_view($delta = '') {
             '#description' => t('Link for loggin out user.'),
           ),
         );
+
+        $module_path = url(drupal_get_path('module', 'user_dash'));
+        $icon_options = array(
+          'path' => $module_path . '/icons/settings_icon.png',
+          'alt' => 'Manage',
+          'title' => 'Manage',
+          'width' => '20px',
+          'height' => '20px',
+          'attributes' => array(
+            'class' => 'settings_icon',
+            'align' => 'right',
+          ),
+        );
+
+        $icon = theme('image', $icon_options);
+
         $block['content']['lab_migration'] = array(
           '#prefix' => '<hr />',
-          '#suffix' => '<br />',
+#          '#suffix' => '<br />',
           '#markup' => l('Lab Migration', 'user/lab_migration'),
           '#description' => 'Display Lab Migration link',
         );
         if (user_access('access user_dash_lm manage')) {
           //Displays link when 'user_dash_lm manage' permission is available to user.
           $block['content']['lab_migration_manage'] = array(
-            '#suffix' => '<br />',
-            '#markup' => l('Lab Migration Manage', 'admin/lab_migration_manage'),
+            '#suffix' => '</a>',
+            '#prefix' => '<a href="admin/lab_migration_manage">',
+#            '#markup' => '<img src="icons/settings_icon.png" alt="Lab Migration Manage" align="right" />',
+            '#markup' => $icon,
+#            '#markup' => '<p>'.$module_path.'</p>',
             '#description' => 'Display Lab Migration Manage link',
           );
         }
         $block['content']['text_book_companionin'] = array(
-          '#suffix' => '<br />',
+          '#prefix' => '<br />',
           '#markup' => l('Text Book Companion', 'user/text_book_companion'),
           '#description' => 'Display TextBook Companion link',
         );
         if (user_access('access user_dash_tbc manage')) {
           //Displays link when 'user_dash_tbc manage' permission is available to user.
           $block['content']['text_book_manage'] = array(
-            '#suffix' => '<br />',
-            '#markup' => l('Text Book Companion Manage', 'admin/textbook_companion_manage'),
+            '#suffix' => '</a>',
+            '#prefix' => '<a href="admin/textbook_companion_manage">',
+#            '#markup' => l('Text Book Companion Manage', 'admin/textbook_companion_manage'),
+            '#markup' => $icon,
             '#description' => 'Display Text Book Companion Manage link',
           );
         }

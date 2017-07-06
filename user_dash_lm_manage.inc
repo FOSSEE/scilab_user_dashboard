@@ -73,9 +73,9 @@ function user_lab_migration_proposals_progress() {
   return '
 			<div id="progressbar_container">
 				<ul id="progressbar">
-					<li id="node1"><p class="hidden">Submit Proposal</p></li>
+					<li id="node1"><p class="hidden">'.l('Submit Proposal','/book_proposal').'</p></li>
 					<li id="node2"><p class="hidden">Proposal waiting for approval</p></li>
-					<li id="node3"><p class="hidden"><span id="approved">approved waiting for Code Submission</span><span id="rejected">Proposal Rejected</span></p></li>
+					<li id="node3"><p class="hidden"><span id="approved">Approved waiting for' .l('Code Submission','/textbook_companion/code').'</span><span id="rejected">Proposal Rejected</span></p></li>
 					<li id="node4"><p class="hidden">Solution received and approved. Lab is completed</p></li>
 				</ul>
 			</div>
