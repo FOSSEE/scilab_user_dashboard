@@ -33,6 +33,9 @@ function user_lab_migration_proposals() {
 
     //If data is fetched then display the propsal id.
     $contents .= '<div id="selected_proposal"><h4>Current Proposal</h4> Proposal ID: ' . $p->id;
+    $contents .= '<br /><i>'.date('d-m-Y', $p->creation_date).'</i>';
+    $contents .= '<br />Lab: '.$p->lab_title;
+    $contents .= '<br />Status: '.getApprovalStatus($p->approval_status);
     //Get the progressBar and append it to contents.
     $contents .= user_lab_migration_proposals_progress();
     //Fill the progress bar with current proposal status.
@@ -88,7 +91,7 @@ function user_lab_migration_proposals_progress() {
 				<ul id="progressbar">
 					<li id="node1"><p class="hidden">Submit Proposal</p></li>
 					<li id="node2"><p class="hidden">Proposal waiting for approval</p></li>
-					<li id="node3"><p class="hidden"><span id="approved">approved waiting for Code Submission</span><span id="rejected">Proposal Rejected</span></p></li>
+					<li id="node3"><p class="hidden"><span id="approved">Proposal approved waiting for '. l('Code Submission', '/lab_migration/code') .'</span><span id="rejected">Proposal Rejected</span></p></li>
 					<li id="node4"><p class="hidden">Solution received and approved. Lab is completed</p></li>
 				</ul>
 			</div>
@@ -114,4 +117,3 @@ function getApprovalStatus($approval_status = 0) {
       return 'Unknown';
   }
 }
-

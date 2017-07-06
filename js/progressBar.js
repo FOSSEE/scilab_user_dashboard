@@ -11,9 +11,8 @@ function selectProposal_LM(proposal_status = 0){
 		makeNodeActive('node3');
 	}
 	if (proposal_status == 2) {
-		makeNodeActive('node3');
+	//	makeNodeActive('node3');
 		makeNodeRejected('approved','rejected');
-// 		drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/rejected.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
 	}
 	if (proposal_status == 3) {
 		makeNodeActive('node4');
