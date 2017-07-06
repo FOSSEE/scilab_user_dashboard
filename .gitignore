@@ -1,2 +1,5 @@
 # Coder Files #
 *.coder.orig
+
+# Vim Temp File #
+*.swp
