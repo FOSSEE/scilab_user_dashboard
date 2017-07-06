@@ -99,6 +99,11 @@ function user_dash_block_view($delta = '') {
             '#markup' => t($GLOBALS['user']->mail),
             '#description' => t('Displays the name of authenticated user.'),
           ),
+          'last_login' => array(
+            '#prefix' => '<b>',
+            '#suffix' => '</b><br />',
+            '#markup' => t('Last Login: ') . format_date($GLOBALS['user']->login,'small'),
+          ),
 #          'update_contact_details' => array(
 #            '#suffix' => '<br />',
 #            '#markup' => l('Update Contact Details', '/mycontact'),
