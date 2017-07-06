@@ -33,7 +33,7 @@ function user_text_book_companion_proposals() {
     //Display current proposal details.
     $contents .= '<div id="selected_proposal"><h4>Current Proposal:</h4>Proposal ID: ' . $p->id;
     $contents .= '<br />Book: '. $p->book .' [ ' . $p->edition . ' ]';
-    $contents .= '<br /><em>by ' . $p->author;
+    $contents .= '<br /><em>by ' . $p->author . '</em>';
     //Create a empty progressBar and append to html contents.
     $contents .= user_tbc_progress();
     //Call the javascript function and fill the progress bar.
