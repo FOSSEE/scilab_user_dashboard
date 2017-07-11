@@ -7,4 +7,3 @@ It is mainly helpful for users who post new propsols.
 	For displaying Block.
 3. Go to Block configuration to location you want.
 4. Give the permission's to user who can access it.
-=======
