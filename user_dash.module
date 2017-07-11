@@ -74,11 +74,6 @@ function user_dash_block_info() {
     'cache' => DRUPAL_NO_CACHE,
     'region' => 'sidebar_first',
   );
-  $blocks['nav_side_bar'] = array(
-    'info' => t('Navigation Side Bar'),
-    'cache' => DRUPAL_NO_CACHE,
-    'region' => 'sidebar_first',
-  );
   return $blocks;
 }
 
@@ -190,13 +185,6 @@ function user_dash_block_view($delta = '') {
         $block['subject'] = t('ACCESS DENIED');
       }
       break;
-
-    //For the navigation side bar
-    case 'nav_side_bar':
-
-      //CSS can be added to theme
-#      drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/nav_side_bar_block.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
-      $block['subject'] = "Navigation";
   }
   return $block;
 }
