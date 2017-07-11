@@ -96,7 +96,7 @@ function user_dash_block_view($delta = '') {
         //Check for user User Access (Access Mantained by Drupal).
         
         //Add css for the block
-        drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/block.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+        drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/user_dash_block.css', array('group' => CSS_DEFAULT, 'every_page' => TRUE));
 
         //Subject in form of link to redirect to current user's page
         $block['subject'] = "<a href='http://localhost/scilab_in_2015/user/" . $GLOBALS['user']->uid . "'>" . $GLOBALS['user']->name . "'s</a> Dashboard";
@@ -190,6 +190,13 @@ function user_dash_block_view($delta = '') {
         $block['subject'] = t('ACCESS DENIED');
       }
       break;
+
+    //For the navigation side bar
+    case 'nav_side_bar':
+
+      //CSS can be added to theme
+#      drupal_add_css(drupal_get_path('module', 'user_dash') . '/css/nav_side_bar_block.css', array('group' => CSS_DEFAULT, 'every_page' => FALSE));
+      $block['subject'] = "Navigation";
   }
   return $block;
 }
