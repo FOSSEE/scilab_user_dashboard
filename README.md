@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # User Dash Board
 This module creates a block and various menu links for user, so that he can see his previous proposals.
 It is mainly helpful for users who post new propsols.
@@ -7,3 +8,6 @@ It is mainly helpful for users who post new propsols.
 	For displaying Block.
 3. Go to Block configuration to location you want.
 4. Give the permission's to user who can access it.
+=======
+# scilab_user_dashboard
+>>>>>>> 6a0e5a0be2e765220abe90ba477517d4502ff924
