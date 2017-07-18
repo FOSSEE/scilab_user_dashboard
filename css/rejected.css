@@ -1,0 +1,23 @@
+/* Makes all the active node's red */
+#progressbar li.active_rej {
+	color: red;
+}
+
+/* Makes all the connectors and block with active class red(background) */
+#progressbar li.active_rej:before {
+background: red;
+}
+
+/* Gives a red shadow to active node's block */
+#progressbar li.active_rej:before {
+	-webkit-box-shadow: 0px 0px 2px red;
+/* 	-moz-box-shadow: 0px 0px 2px red; */
+	box-shadow: 0px 0px 2px red;
+}
+
+/* Extends shadow of active node's block */
+#progressbar li.active_rej:hover:before{
+-webkit-box-shadow: 0px 0px 10px 0px rgba(255, 0, 0, 0.67);
+/* -moz-box-shadow:    0px 0px 10px 0px rgba(255, 0, 0, 0.67); */
+box-shadow:         0px 0px 10px 0px rgba(255, 0, 0, 0.67);
+}

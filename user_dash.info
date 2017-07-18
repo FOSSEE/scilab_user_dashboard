@@ -1,0 +1,8 @@
+name = User DashBoard
+description = This module displays a block for user information and pages for projects.
+package = User DashBoard
+core = 7.x
+version = 7.x-1.0
+dependencies[] = IITB:lab_migration
+dependencies[] = IITB:textbook_companion
+dependencies[] = IITB:textbook_companion_fixer
